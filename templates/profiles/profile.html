@@ -1,0 +1,224 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'node_modules/cropperjs/dist/cropper.min.css' %}">
+{% endblock %}
+
+{% block title %}
+    {% if username == user.username %} 
+        Mi perfil 
+    {% else %}
+        Perfil de {{username}}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="container" id="profile" itemscope itemtype="http://schema.org/ProfilePage">
+        <h2 class="h2 text-light" itemprop="name">Perfil de <strong>{{username}}</strong></h2><hr>
+        <div class="row m-5">
+            <div class="col-12 col-md-3 text-center">
+                <dl class="mb-4 mb-md-0">
+                    <dt>
+                        <label class="d-block mb-3 text-light fw-normal"><strong>Imagen de Perfil</strong></label>
+                    </dt>
+                    <dd class="avatar-container text-center">
+                        <img itemprop="image" class="avatar-profile-img rounded-circle mb-4 p-1" src="{% get_media_prefix %}{{avatar}}" width="200" alt="Imagen de perfil">
+                        <br>
+                        {% if user.username == username %}
+                            <input class="d-none" type="file" id="avatar_upload" onchange="openCropperModal()">
+                            <label class="btn btn-outline-light btn-sm" for="avatar_upload"><i class="fa-solid fa-pencil"></i> Upload new image</label>
+                        {% endif %}
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-12 col-md-9">
+                <div class="card mb-4 w-75 ms-3">
+                    <div class="card-body">
+                        {% if user.username == username %}
+                        <form itemprop="potentialAction" itemscope itemtype="http://schema.org/UpdateAction" action="update_profile" method="post">
+                            {% csrf_token %}
+                        {% endif %}
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="inputNombre"><strong>Nombre</strong></label>
+                                    <input itemprop="alternateName" class="form-control" id="inputNombre" name="inputNombre" type="text" placeholder="Ingresa tu nombre" value="{{nombre}}" {% if user.username != username %} disabled {% endif %} autocomplete="off"></div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="inputApellido"><strong>Apellido</strong></label>
+                                        <input class="form-control" id="inputApellido" name="inputApellido" type="text" placeholder="Ingresa tu apellido" value="{{apellido}}" {% if user.username != username %} disabled {% endif %} autocomplete="off">
+                                    </div>
+                                </div>
+                                {% if user.username == username %}
+                                    <div class="mb-3">
+                                        <label class="small mb-1" for="inputEmail"><strong>Email</strong></label>
+                                        <input disabled class="form-control" id="inputEmail" name="inputEmail" type="email" placeholder="Ingresa tu email" value="{{email}}" autocomplete="off">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="small mb-1" for="changePass"><strong>Cambiar contraseña</strong></label>
+                                        <ul class="list-group" id="changePass">
+                                            <input class="form-control mb-1" id="inputCurrPass" name="inputCurrPass" type="password" placeholder="Ingresa tu contraseña actual" autocomplete="off">
+                                            <input class="form-control mb-1" id="inputNewPass" name="inputNewPass" type="password" placeholder="Ingresa tu nueva contraseña" autocomplete="off">
+                                            <input class="form-control mb-1" id="inputNewPass2" name="inputNewPass2" type="password" placeholder="Confirma tu nueva contraseña" autocomplete="off">
+                                        </ul>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="True" id="checkPass" name="checkPass">
+                                            <label class="form-check-label" for="checkPass">Confirma que deseas cambiar tu contraseña</label>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="inputBio"><strong>Bio</strong></label>
+                                    <textarea itemprop="description" class="form-control" id="inputBio" name="inputBio" type="text" rows="5" {% if user.username != username %} disabled {% endif %} autocomplete="off">{{biography}}</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="list"><strong>Redes sociales</strong></label>
+                                    <ul class="list-group" id="list" itemprop="sameAs" itemscope itemtype="http://schema.org/WebPage">
+                                        {% for red_social in redes_sociales %}
+                                        <div class="d-flex">
+                                            <input class="form-control form-control-sm" id="inputLink" name="inputLink{{forloop.counter}}" type="text" placeholder="Link a red social" value="{{red_social.link}}" disabled>
+                                            {% if user.username == username %}<a href="{% url 'delete_link' username=user.username link_id=red_social.id %}" class="m-1 ms-2 border-0"><i class="fa-solid fa-trash-can" style="color: #ff0000;"></i></a>{% endif %}
+                                        </div>
+                                        {% endfor %}
+                                        {% if user.username == username %}
+                                            <button type="button" class="btn btn-outline-secondary btn-sm w-25" data-bs-toggle="modal" data-bs-target="#addLink">Agregar link</button>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="small mb-1" for="inputPais"><strong>Pais</strong></label>
+                                    <input class="form-control" id="inputPais" placeholder="Ingresa tu pais" name="inputPais" type="text" value="{{pais}}" {% if user.username != username %} disabled {% endif %} autocomplete="off">
+                                </div>
+                            {% if user.username == username %}    
+                                <button class="btn btn-outline-success" type="submit">Guardar cambios</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if user.username == username %}
+        <!-- Add Links Modal -->
+        <div class="modal fade" id="addLink" aria-labelledby="addLink">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="h5">Agregar link a red social</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form action="add_link" method="post">
+                            {% csrf_token %}
+                            <input class="form-control mb-3" type="text" id="agregarLink" name="agregarLink" placeholder="https://github.com/JohnDoe">
+                            <button type="submit" class="btn btn-outline-dark">Agregar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change Profile Picture Modal -->
+        <div class="my-modal text-center text-light " id="changeProfilePic" aria-labelledby="changeProfilePic">
+            <div class="my-modal-content">
+                <dl>
+                    <dt>
+                        <h6 class="h6 mt-3"><strong>Recorta tu nueva imagen de perfil</strong></h6>
+                    </dt><hr>
+                    <dd>
+                        <form id="formChangeProfilePic" method="post">
+                            {% csrf_token %}
+                            <div class="my-cropper-container ps-1 pe-1">
+                                <div>
+                                    <img id="imageCropper" src="" alt="Picture">
+                                </div>
+                            </div>
+                            <hr>
+                            <button type="submit" class="btn btn-outline-success w-75">Agregar</button>
+                        </form>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block moreJs %}
+    <script src="{% static 'node_modules/cropperjs/dist/cropper.min.js' %}" type="text/javascript"></script>
+
+    <script>
+        var cropper;
+
+        function openCropperModal(){
+            var myModal = $(".my-modal")[0];
+            myModal.style.display = "block";
+
+            
+            var file = document.querySelector('input[type=file]').files[0];
+            var preview = document.getElementById("imageCropper");
+            var reader = new FileReader();
+
+            reader.onloadend = function(){
+                preview.src = reader.result;
+
+                cropper = new Cropper(preview, {
+                    aspectRatio: 1,
+                    viewMode: 3,
+                    zoomable: false,
+                    scalable: false,
+                    movable: false,
+                    responsive: false,
+                    minCropBoxWidth: 200,
+                    minCropBoxHeight: 200,
+                });
+
+                document.getElementById("formChangeProfilePic").addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    // Obtener los datos de la imagen recortada
+                    var croppedCanvas = cropper.getCroppedCanvas();
+                    croppedCanvas.toBlob(function(blob) {
+                        // Crear un objeto FormData para enviar los datos de la imagen
+                        var formData = new FormData();
+                        formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+                        formData.append('image', blob);
+                        // Enviar los datos de la imagen al servidor utilizando AJAX
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', "{% url 'update_avatar' username=user.username %}", true);
+                        xhr.onload = function() {
+                            if (this.status == 200) {
+                                // La imagen se ha enviado correctamente
+                                console.log('Imagen enviada correctamente');
+                                location.reload();
+                            } else {
+                                // Hubo un error al enviar la imagen
+                                console.log('Error al enviar la imagen');
+                            }
+                        };
+                        xhr.send(formData);
+                    });
+                });
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+            }
+        }        
+    </script>
+    <script>
+        var myModal = $(".my-modal")[0]
+
+        if (myModal.style.display != "none")
+        {
+            var myModalContent = $(".my-modal-content")[0]
+            $(document).mouseup(function(e) 
+            {
+                if (!myModalContent.contains(e.target)) 
+                {
+                    myModal.style.display = "none";
+                    cropper.destroy();
+                }
+            });
+        }
+    </script>
+{% endblock %}

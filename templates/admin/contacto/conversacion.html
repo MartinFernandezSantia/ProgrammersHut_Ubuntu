@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block main %}
+    <section class="w-50 mx-auto border border-1 border-secondary rounded-2 overflow-hidden mt-2">
+        <div class="container m-0">
+            <div class="row" style="background: transparent;">
+                <div id="custom-scrollbar" class="col-12 p-2 mx-auto overflow-y-auto">
+                        <ul id="chat-log" class="m-0 list-unstyled">
+                            {% for i in conversacion %}
+                                <li class="d-flex mb-4 justify-content-start">
+                                    <div class="card mask-custom">
+                                        <div class="card-header"><i>{{ i.nombre }}</i> | <b>{{i.mail}}</b> | {{i.fecha}}</div>
+                                        <div class="card-body">{{i.contenido}}</div>
+                                    </div>
+                                </li>
+                                <li class="d-flex mb-4 justify-content-end">
+                                    <div class="card mask-custom">
+                                        <div class="card-header"><b>ProgrammersHut</b> | {{i.fecha_respuesta}}</div>
+                                        <div class="card-body">{{i.respuesta}}</div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

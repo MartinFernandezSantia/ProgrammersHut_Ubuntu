@@ -1,0 +1,12 @@
+{
+	"version": 3,
+	"file": "variables.css",
+	"sources": [
+		"../scss/variables.scss"
+	],
+	"sourcesContent": [
+		"// COLORES \r\n$bg-main:#0d1425;\r\n$bg-main-darker:#090E1A;\r\n$bg-main-darker2:#000E1A;\r\n$animated-bg-color1:#45f3ff;\r\n$animated-bg-color2:#e91c25;\r\n$chat-bg: #131e37;\r\n\r\n\r\n\r\n// CLASES\r\n.montserrat{font-family: 'Montserrat', sans-serif;}\r\n\r\n\r\n// MIXINS\r\n@mixin animated-bg($color, $delay) {\r\n    content: \"\";\r\n    position: absolute;\r\n    top: -50%;\r\n    left: -50%;\r\n    width: 100%;\r\n    height: 100%;\r\n    background: linear-gradient(0deg, transparent,\r\n    transparent,$color,$color,$color);\r\n    transform-origin: bottom right;\r\n    animation: animate 6s linear infinite;\r\n    animation-delay: $delay;\r\n}"
+	],
+	"names": [],
+	"mappings": ";AAWA,AAAA,WAAW,CAAA;EAAC,WAAW,EAAE,wBAAwB;CAAG"
+}

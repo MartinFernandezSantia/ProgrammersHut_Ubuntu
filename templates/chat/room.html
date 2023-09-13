@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %} Lobby {% endblock %}
+
+
+{% block main %}
+    <section class="w-75 mx-auto border border-1 border-secondary rounded-2 overflow-hidden mt-2">
+        <div class="container m-0">
+            <div class="row" style="background: transparent;">
+                <div class="col-12 p-0 mx-auto" style="height: 520px;">
+                    <div id="custom-scrollbar" class="container overflow-y-auto p-2" style="height: 90%;">
+                        <ul id="chat-log" class="m-0 list-unstyled">
+                        </ul>
+                    </div>
+                    <div class="container">
+                        <div class="wrapper d-inline-flex bg-secondary w-100 rounded-2 justify-content-center align-items-center">
+                            <div class="icon-btn-box ms-1 p-1 rounded-circle dropdown">
+                                <button type="button" class="border-0 ms-1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="{% static 'img/clip-icon.svg' %}" width="22" alt="Adjuntar">
+                                </button>
+                                <ul class="dropdown-menu border-0 mb-2" style="background: transparent;">
+                                    <li><button type="button" class="border-0">
+                                        <img src="{% static 'img/add-image.svg' %}" width="30" alt="Agregar imagenes">
+                                    </button></li>
+                                </ul>
+                            </div>
+                            <input id="chat-message-input" style="background: transparent;" placeholder="Mensaje" class="border-0 input-group form-control m-1" type="text" autofocus autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/reconnecting-websocket.min.js' %}"></script>
+<script>
+    let username = "{{ username }}";
+    const roomName = "{{ room_name }}";
+
+    const chatSocket = new ReconnectingWebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/chat/'
+        + roomName
+        + '/'
+    );
+
+    chatSocket.onopen = function(e) {
+        fetchMessages();
+    }
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        if (data["command"] === "fetched_messages") {
+            for (let i = data["messages"].length - 1; i > -1; i--){
+                createMessage(data["messages"][i]);
+            }
+            
+            $("#custom-scrollbar").animate({ scrollTop: $('#custom-scrollbar').prop("scrollHeight")}, 1000);
+        }
+        else if (data["command"] === "new_message") {
+            createMessage(data["message"]);
+        }
+    }
+
+    
+    function createMessage(data) {
+        var author = data['author'];
+        var msgListTag = $('<li></li>').addClass("d-flex mb-4");
+        var avatar = $('<img>')
+            .addClass("rounded-circle d-flex align-self-start me-3 shadow-1-strong")
+            .attr({
+            src: "{% get_media_prefix %}avatar/" + author + ".svg",
+            alt: "{{ user.username }}",
+            width: 40
+            })
+        ;
+        var card_div = $('<div></div>').addClass("card mask-custom");
+        var card_header = $('<div></div>').addClass("card-header");
+        var card_body = $('<div></div>').addClass("card-body");
+        var user = $('<strong></strong>').text(author);
+        var message_content = $('<p></p>').text(data["content"]);
+        var date = $('<small></small>').text(data["date"] + " " + data["time"]);
+
+        msgListTag.append(avatar, card_div);
+        card_div.append(card_header, card_body);
+        card_header.append(user, date);
+        card_body.append(message_content);
+
+        if (author == username) {
+            msgListTag.addClass("justify-content-end");
+        } else {
+            msgListTag.addClass("justify-content-start");
+        }
+
+        $('#chat-log').append(msgListTag);
+    }
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    function fetchMessages() {
+        chatSocket.send(JSON.stringify({"command": "fetch_messages"}))
+    }
+
+    $('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                "command": "new_message",
+                'message': message,
+                "from": username,
+            }));
+            messageInputDom.value = '';
+        }
+    };
+</script>    
+
+<script>
+    let add_img = document.getElementsByClassName("icon-btn-box")[0];
+
+    document.addEventListener('click', function(event) {
+        if (!add_img.querySelector('button:nth-child(1)').contains(event.target)) {
+            add_img.style.backdropFilter = "brightness(1)";
+        } 
+        else {
+            if (add_img.style.backdropFilter === "brightness(1.2)"){
+                add_img.style.backdropFilter = "brightness(1)";
+            }
+            else {
+                add_img.style.backdropFilter = "brightness(1.2)";
+            }
+        }
+    });
+    
+</script>
+{% endblock %}

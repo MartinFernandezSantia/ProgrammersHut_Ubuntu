@@ -1,0 +1,61 @@
+{% extends "login/loginRegisterLayout.html" %}
+{% block title %} Registrarme {% endblock %}
+
+{% block loginRegister %}
+    <form class="form-floating text-center rounded-circle text-white p-5" action="register" method="post">
+        {% csrf_token %}
+        <h2 class="mb-2 text-center mx-auto">Crear cuenta</h2>
+        <div class="mx-auto w-75">
+            <div class="form-floating">
+                <input type="text" placeholder="Nombre de Usuario" class="border-0 border-bottom rounded-0 form-control" name="registerUsername" id="registerUsername" required autocomplete="off">
+                <label for="registerUsername">Nombre de Usuario</label>
+                <p class="m-0 mt-1 form-text text-secondary text-start">Se aceptan 4-50 caract., mayus., minus., numeros y - o _ .</p>
+            </div>
+            <div class="mb-1 form-floating">
+                <input type="email" placeholder="Correo electronico" class="border-0 border-bottom rounded-0 form-control" name="registerMail" id="registerMail" required autocomplete="off">
+                <label for="registerMail">Correo electronico</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" placeholder="Contraseña" class="form-control border-0 border-bottom rounded-0" name="registerPassword1" id="registerPassword1" required>
+                <label for="registerPassword1">Contraseña</label>
+                <p class="m-0 mt-1 form-text text-secondary text-start">Mínimo: 8+ caract., mayús., minús. y números.</p>
+            </div>
+            <div class="mb-3 form-floating">
+                <input type="password" placeholder="Confirmar contraseña" class="form-control border-0 border-bottom rounded-0" name="registerPassword2" id="regiserPassword2" required>
+                <label for="regiserPassword2">Confirmar contraseña</label>
+            </div>
+        </div>
+        <div class="d-grid col-8 mx-auto">
+            <button type="submit" class="btn btn-outline-info btn-b">Registrarme</button>
+        </div>
+    </form>
+{% endblock %}
+
+{% block moreJs2 %}
+<script>
+    $(document).ready(function() {
+        $('#registerUsername').change(function() {
+            var schema = {
+                "@context": "https://schema.org",
+                "@type": "RegisterAction",
+                "agent": {
+                    "@type": "Person",
+                    "name": $(this).val()
+                }
+            };
+            $("#schema").text(JSON.stringify(schema));
+        });
+    });
+</script>
+
+<script type="application/ld+json" id="schema">
+    {
+        "@context": "https://schema.org",
+        "@type": "RegisterAction",
+        "agent": {
+            "@type": "Person",
+            "name": ""
+        }
+    }
+</script>
+{% endblock %}

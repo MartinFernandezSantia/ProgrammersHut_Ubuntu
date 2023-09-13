@@ -1,0 +1,330 @@
+body{
+    min-height: 100vh;
+    background-color: $bg-main;
+    display: flex;
+    flex-direction: column;
+}
+
+// body, html {
+//     margin: 0px;
+//     // height: 100%;
+// }
+
+// Layout
+.navbar.navbar-expand-lg.navbar-dark{
+    a.navbar-brand{width: 4%}
+    .collapse.navbar-collapse{
+        .dropstart{
+            button.dropdown-toggle{
+                img{border:solid 1px goldenrod ;}
+            }
+        }
+        .dropend{width: fit-content !important;}
+
+        .dropdown-menu {
+            border-radius: 5px;
+            background-color: $gray-900;
+        }
+    }
+}
+
+main {flex: 1;}
+
+.footer {
+    width: 100%;
+    height: fit-content;
+}
+
+footer a {
+    color: #999;
+    text-decoration:none;
+}
+
+footer a:hover, footer a:focus {
+    color: #aaa;
+    text-decoration:none;
+    border-bottom:1px dotted #999;
+}
+
+footer {
+    backdrop-filter: brightness(0.7);
+    height: 100px;
+    padding-top: 30px;
+}
+
+
+
+// Homepage
+.container-fluid.mt-5 {
+    .row.intro.pt-5.pb-5.pt-md-5.pb-md-5.p-0.p-md-4.invert-cols{
+        backdrop-filter: brightness(0.7);
+
+        .col-md-6.col-sm-12.text-light{
+            .mx-auto.text-center.text-md-start.montserrat{
+                width: 80%;
+
+                a.btn{
+                    color: white;
+                    background-color: $animated-bg-color2;
+
+                    &:hover {
+                        filter: brightness(0.9);
+                    }
+                }
+            }
+        }
+        div.col-md-6.col-sm-12{position: relative;}
+    }
+}
+////////////////////////////////// 
+
+
+// Room
+section {
+    background-color: $chat-bg;
+
+    .row{
+
+        .col-12{
+            height: 520px;
+
+            #custom-scrollbar{
+                height: 90%;
+            }
+
+                .wrapper {
+
+                    .icon-btn-box{
+
+                        button {
+                            margin: 0 .5% 0 .5%;
+                            padding: 0;
+                            background: transparent;
+                        }
+                    }
+
+                    #chat-message-input {
+                        backdrop-filter: brightness(1.1);
+                    }
+                }
+
+                #chat-log {
+                    li {
+                        .card {
+                            background-color: $bg-main-darker !important;
+                            color: white;
+                            max-width: 75%;
+                
+                            .card-header, .card-body {margin: 0; padding: .7rem;}
+                            .card-body p {margin: 0;}
+                            .card-header small {margin: 1px 0 0 10px;}
+                        }
+                    }    
+                
+                    .justify-content-end {
+                        img {
+                            order: 2;
+                            margin-left: 1%;
+                        }
+                        .card {
+                            order: 1;
+                        }
+                    }
+                    
+                    .justify-content-start img {margin-right: 1%;}
+                }
+
+            #custom-scrollbar::-webkit-scrollbar {
+                width: 12px;
+            }
+                
+            #custom-scrollbar::-webkit-scrollbar-thumb {
+                background-color: $bg-main;
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+            }
+        }
+    }
+}
+//////////////////////////////////////////////
+
+
+
+// Login y Register
+#box {
+    position: relative;
+    background-color: $bg-main-darker2;
+    height: fit-content;
+    overflow: hidden;
+    max-width: 90%;
+
+
+    &::before {@include animated-bg($animated-bg-color1, 0s);}
+    &::after {@include animated-bg($animated-bg-color1, -3s);}
+
+    .borderline::before {@include animated-bg($animated-bg-color2, -1.5s);}
+    .borderline::after {@include animated-bg($animated-bg-color2, -4.5s);}
+
+    @keyframes animate {
+        0% {transform: rotate(0deg);}
+        100% {transform: rotate(360deg);}
+    }
+
+    form {
+        background-color: $bg-main-darker;
+        z-index: 1;
+
+        input {
+            background-color: transparent !important;
+            color: white;
+            
+            &:focus {
+                    border-color: none;
+                    box-shadow: none;
+            }
+        }
+
+        .form-text {font-size: .7rem;}
+
+    }
+}
+///////////////////////////////////
+// Contacto
+
+#contact {
+    list-style-type: none;
+    text-align: start;
+    input {
+        width: 100%;
+        margin-bottom: 7px;
+        background-color: $bg-main-darker;
+        color: white;
+        border: none;
+    }
+    textarea {
+        width: 100%;
+        height: 15rem;
+        background-color: $bg-main-darker;
+        color: white;
+        border: none;
+    }
+}
+////////////////////////////////////
+// Perfiles
+#profile {
+    .avatar-profile-img {
+        background-color: $bg-main-darker;
+        border: 1px solid white;
+    }
+    
+    hr{
+        height: 2px;
+        background-color: grey;
+    }
+
+    *::placeholder{
+        color: white;
+        opacity: 0.5;
+    }
+
+    .col-12.col-md-9{
+        border-left: 1px solid rgba(128, 128, 128, 0.224);
+
+        .card.mb-4.w-75.ms-3 {
+            background: transparent;
+            color: white;
+            border: 0;
+            
+            .card-body{
+                border: 0;
+
+                .list-group {
+                    .d-flex {
+                        button {
+                            background: transparent !important;
+                        }
+                    }
+                }
+            }
+
+            input, textarea {
+                background-color: $bg-main-darker;
+                color: white;
+            }
+
+            .form-control:disabled {
+                opacity: 0.5 !important;
+            }
+        }
+    }
+}
+
+.my-modal {
+    margin: 0px;
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    z-index: 1055;
+    height: 100%;
+    backdrop-filter: brightness(0.4);
+    display: none;
+
+    .my-modal-content {
+        width: 30%;
+        background-color: $bg-main;
+        border: 1px solid white;
+        border-radius: 10px;
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.my-cropper-container {
+        margin: 20px auto;
+        max-width: 500px !important;
+        max-height: 500px !important;
+        & > * {
+            max-width: 500px !important;
+            max-height: 500px !important;
+        }
+        
+
+        img {
+            width: 500px !important;
+        }
+    }
+
+
+///////////////////////////////////
+// MEDIA QUERIES
+@media (min-width: 720px) {
+    .vertical-center{
+        position: absolute;
+        top: 50%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+}
+
+@media (max-width: 719px) {
+    nav a.navbar-brand { width: 10% !important;}
+
+    .intro-img {
+        width: 90%;
+    }
+    .invert-cols .col-sm-12:first-child {
+        order: 2;
+        margin-top: 10%;
+    }
+    .invert-cols .col-sm-12:last-child {
+        order: 1;
+    }
+    #box{
+        .rounded-circle, &.rounded-circle{border-radius: 0% !important;}
+    }
+}
+/////////////////////////////////

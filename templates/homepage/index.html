@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}ProgrammersHut{% endblock %}
+
+{% block main %}
+    <div class="container-fluid mt-5">
+        <div class="row intro pt-5 pb-5 pt-md-5 pb-md-5 p-0 p-md-4 invert-cols">
+            <div class="col-md-6 col-sm-12 text-light">
+                <div class="mx-auto text-center text-md-start montserrat">
+                    <h1 class="mb-2 mb-md-4" itemprop="name">Red social para programadores</h1>
+                    <p class="lh-base" itemprop="description">
+                            Bienvenidos a <strong>ProgrammersHut</strong> la red social para programadores en donde
+                            puedes encontrar a otros desarrolladores como tú, compartir conocimientos y resolver dudas
+                            relacionadas con la programación.
+                    </p>
+                    {% if user.is_authenticated %}
+                        <a itemprop="url" class="btn" href="{% url 'lobby' %}" type="button">Ir al lobby</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="vertical-center mx-auto intro-img">
+                    <img itemprop="image" width="100%" src="{% static 'img/ProgrammersHut1.png' %}" alt="ProgrammersHut image">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

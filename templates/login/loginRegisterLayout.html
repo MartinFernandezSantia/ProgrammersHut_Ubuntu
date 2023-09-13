@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %} {{nombre_sitio}} {% endblock %}
+
+{% block main %}
+    <div id="box" class="rounded-circle p-1 mx-auto">
+        <span class="borderline"></span>
+        {% block loginRegister %}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block moreJs %}
+<script>
+    let box = $("#box");
+    box.width(box.height() + 20);
+
+    let marginTop = ($("main").innerHeight() - box.innerHeight()) / 2;
+    box.css("marginTop", marginTop);
+</script>
+
+{% block moreJs2 %}{% endblock %}
+
+{% endblock %}

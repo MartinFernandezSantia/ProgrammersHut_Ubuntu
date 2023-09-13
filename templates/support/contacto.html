@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}Contacto{% endblock %}
+{% load static %}
+
+{% block main %}
+<div class="container-fluid" itemscope itemtype="http://schema.org/ContactPage">
+    <div class="row" style="padding-top:20px;">   
+        <div class="col-10 col-md-3 text-light mx-auto" style="padding-bottom:15px;">
+            <h1 class="h1" itemprop="name">Contacto</h1>    
+            <form id="contact" method="post" class="col-sm-12" itemprop="potentialAction" itemscope itemtype="http://schema.org/CommunicateAction">{% csrf_token %} 		
+                <div class="col-12 form-group" >
+                    {{ form }}
+                </div> 
+                <div class="row justify-content-between">
+                    <div class="col-4"></div>
+                    <div class="col-12 mt-2 mb-4">
+                        <button type="submit"  class=" col-12 btn btn-danger">Enviar</button>
+                    </div>
+                </div>                        
+            </form>
+        </div>    
+    </div>
+</div>  
+{% endblock %}
+{% block moreJs %}
+<script>
+    let nombre = $("#id_nombre")
+    let descripcion = $("#id_descripcion")
+    let mail = $("#id_mail")
+    let captcha = $("#id_captcha_1")
+
+    nombre.attr("placeholder", "Nombre");
+    descripcion.attr("placeholder", "Descripcion");
+    mail.attr("placeholder", "Mail");
+    captcha.attr("placeholder", "Captcha");
+
+    nombre.addClass("form-control mb-1");
+    descripcion.addClass("form-control mb-1");
+    mail.addClass("form-control mb-1");
+    captcha.addClass("form-control mb-1");
+</script>
+{% endblock %}

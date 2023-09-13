@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+	<nav class="navbar navbar-expand-lg w-75 mx-auto pt-3 navbar-dark">
+		<div class="container-fluid">
+			<a itemprop="url" class="navbar-brand me-4" style="width: 4%;" href="{% url 'index' %}">
+				<img itemprop="image" width="100%" src="{% static 'img/favicon.ico' %}" alt="Home">
+			</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item me-2">
+						<a class="nav-link" href="#">Grupos</a>
+					</li>
+					<li class="nav-item me-2">
+						<a class="nav-link" href="#">Amigos</a>
+					</li>
+					<li class="nav-item me-2">
+						<a class="nav-link" href="#" role="button">Favoritos</a>
+					</li>
+				</ul>
+				{% if user.is_authenticated %}
+				<form class="form-floating me-auto w-50" action="" method="post" itemprop="potentialAction" itemscope itemtype="https://schema.org/SearchAction">{% csrf_token %}
+						<meta itemprop="target" content="/profile/{search}">
+					<input itemprop="query-input" type="text" placeholder="Buscar" class="border-0 rounded-pill form-control" id="search" name="search" autocomplete="off">
+					<label for="search"><i class="fa-solid fa-magnifying-glass"></i> Buscar</label>
+				</form>
+				<div class="dropstart" id="avatar_dropdown">
+					<button class="dropdown-toggle border-0 btn d-flex align-items-center px-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+						<img itemprop="image" src="{%get_media_prefix%}{% if user.datosusuario.profile_pic %}{{ user.datosusuario.profile_pic }}{% else %}{{ user.datosusuario.avatar }}{% endif %}" class="rounded-circle" height="40" alt="Imagen de perfil" loading="lazy" style="border:solid 1px goldenrod ;"/>
+						<strong class="ms-lg-2 text-white">{{user.username}}</strong>
+					</button>
+					<ul class="dropdown-menu dropdown-menu-dark">
+						<li><a itemprop="url" href="{% url 'profile' username=user.username %}" class="dropdown-item">Mi perfil</a></li>
+						<li><a itemprop="url" href="{% url 'logout_request' %}" class="dropdown-item">Cerrar sesión</a></li>
+					</ul>
+				{% else %}
+					<!-- Login y Registro -->
+					<div class="d-flex">
+						<a  class="btn btn-outline-light me-3" href="{% url 'login' %}">Iniciar Sesión</a>
+						<a  class="btn btn-outline-light" href="{% url 'register' %}">Registrarse</a>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</nav>
+	{% include "generic/messages.html" %}
+
+	<main class="overflow-hidden">{% block main %}{% endblock %}</main>
+
+	<footer class="footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+					<div style="display: inline-flex;">
+						<img itemprop="image" src="{% static 'img/favicon.ico' %}" width="35" height="35">
+						<h4 class="pt-1">ProgrammersHut</h4>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-6">
+							<ul class="list-unstyled">
+								<li><a itemprop="url" href="">Product</a></li>
+								<li><a itemprop="url" href="">Benefits</a></li>
+								<li><a itemprop="url" href="">Partners</a></li>
+								<li><a itemprop="url" href="">Team</a></li>
+							</ul>
+						</div>
+						<div class="col-6">
+							<ul class="list-unstyled">
+								<li><a itemprop="url" href="">Documentation</a></li>
+								<li><a itemprop="url" href="">Support</a></li>
+								<li><a itemprop="url" href="{% url 'faq' %}">FAQ</a></li>
+								<li><a itemprop="url" href="">About</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-1"></div>
+				<div class="col-md-3">
+					<h4 class="text-md-right pt-1 mb-4">Contactanos</h4>
+					<hr>
+					<ul class="nav">
+						<li class="nav-item"><a itemprop="url" href="https://www.facebook.com/" class="nav-link pl-0"><i class="fa fa-facebook fa-lg"></i></a></li>
+						<li class="nav-item"><a itemprop="url" href="https://twitter.com/" class="nav-link"><i class="fa fa-twitter fa-lg"></i></a></li>
+						<li class="nav-item"><a itemprop="url" href="https://github.com/" class="nav-link"><i class="fa fa-github fa-lg"></i></a></li>
+						<li class="nav-item"><a itemprop="url" href="https://www.instagram.com/" class="nav-link"><i class="fa fa-instagram fa-lg"></i></a></li>
+						<li class="nav-item"><a itemprop="url" href="{% url 'contacto' %}" class="nav-link"><i class="fa-solid fa-envelope"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
+{% endblock %}
+
+{% block javascript %}
+
+{% if messages %}
+	<script>
+		// Remove messages from window after 3 seconds
+		document.addEventListener("DOMContentLoaded",function(){
+			setTimeout(function(){
+				$("#msg").remove();
+			}, 3000)
+		});
+	</script>
+{% endif %}
+
+<script>
+	// Fix dropdown arrow when resizing window
+	var mediaQuery = window.matchMedia('(max-width: 1023px)');
+	let dropdown = $("#avatar_dropdown")
+	mediaQuery.addListener(function(mq){
+		if (!mq.matches) {
+			dropdown.addClass("dropstart");
+			dropdown.removeClass("dropend");
+		} else {
+			dropdown.addClass("dropend");
+			dropdown.removeClass("dropstart");
+		}
+	});
+</script>
+
+	<script>
+		$("#search").autocomplete({
+			source: "{% url 'buscar_usuario' %}",
+			minLength: 2,
+		}).data("uiAutocomplete")._renderItem = function (ul, item) {
+			var profileUrl = "{% url 'profile' username='my_username' %}";
+			return $("<li />")
+				.data("item.autocomplete", item)
+				.append("<div class='p-2'><a href='" + profileUrl.replace('my_username', item.username) + "' class='nav-link'><img class='rounded-circle me-2' src='" + "{% get_media_prefix %}" + item.avatar + "' width='30'/>" + item.label + "</a></div>")
+				.appendTo(ul);
+		};
+	</script> 
+
+	{% block moreJs %}{% endblock %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}FAQ{% endblock %}
+
+{% block main %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 pt-5 pb-5 text-light">
+            {% for pregunta in preguntas %}
+                <h1 class="h1">{{pregunta.pregunta}}</h1>
+                <p class="text-secondary">{{pregunta.descripcion}}</p>
+                {{pregunta.contenido|safe}}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
