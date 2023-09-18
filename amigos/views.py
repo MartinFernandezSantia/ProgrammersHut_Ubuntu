@@ -7,6 +7,8 @@ import mimetypes
 from http.client import HTTPResponse
 import os
 
+# The `BuscarAmigo` class is a view in a Python Django application that handles an AJAX request to
+# search for users based on a given term and returns the results in JSON format.
 class BuscarAmigo(View):
 
     def get(self, request):

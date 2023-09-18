@@ -7,6 +7,8 @@ import os
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch import receiver
 
+# The class "DatosUsuario" represents a user profile with various attributes such as user information,
+# country, avatar, biography, and profile picture.
 class DatosUsuario(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, db_index=True, blank=False, null=True, on_delete=models.CASCADE)    
@@ -27,6 +29,16 @@ class DatosUsuario(models.Model):
 
 @receiver(pre_delete, sender=DatosUsuario)
 def delete_datosusuario_images(sender, instance, **kwargs):
+    """
+    The function `delete_datosusuario_images` deletes the avatar and profile picture files associated
+    with a user instance.
+    
+    :param sender: The `sender` parameter is the model class that sends the signal. In this case, it is
+    not being used in the function, so it can be removed
+    :param instance: The `instance` parameter refers to the instance of the model that is being saved or
+    deleted. In this case, it seems to be referring to a user object
+    :return: The `__str__` method is returning the username of the user.
+    """
     if instance.avatar:
         if os.path.isfile(os.path.join("media", instance.avatar)):
             os.remove(os.path.join("media", instance.avatar))
@@ -38,6 +50,8 @@ def delete_datosusuario_images(sender, instance, **kwargs):
         return self.user.username
 
 
+# The SocialAccounts class is a model that represents a user's social media accounts, with fields for
+# the account's ID, link, and the user it belongs to.
 class SocialAccounts(models.Model):
      id = models.AutoField(primary_key=True)
      link = models.CharField(max_length=300, null=False)

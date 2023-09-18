@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 import os
 
+# The above class represents a model for storing messages with content, user, and date fields, and
+# includes a method to retrieve the last 50 messages.
 class Mensajes(models.Model):
     content = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -13,6 +15,8 @@ class Mensajes(models.Model):
     def last_50():
         return Mensajes.objects.order_by("-date").all()[:50]
 
+# The `Imagenes` class is a model in Django that represents an image with a foreign key to a
+# `Mensajes` model, and it overrides the `delete` method to also delete the associated image file.
 class Imagenes(models.Model):
     id = models.BigAutoField(primary_key=True)
     img = models.ImageField(upload_to="msg_img/%Y/%m/%d/", blank=False,)

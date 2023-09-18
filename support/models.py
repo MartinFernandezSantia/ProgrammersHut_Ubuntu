@@ -3,6 +3,9 @@ from datetime import datetime
 from django.utils.html import format_html
 from ckeditor_uploader.fields import RichTextUploadingField
 
+# The Consulta class is a model in a Python Django project that represents a consultation with a name,
+# content, response status, email, and date, and has a method to display the status with different
+# background colors.
 class Consulta(models.Model):
 
     ANSWERED = "Contestada"
@@ -30,6 +33,9 @@ class Consulta(models.Model):
         elif self.estadoRespuesta == self.IN_PROCESS:
             return format_html('<span style="background-color:#F0B203; color: #000; padding:5px;"">{}</span>', self.estadoRespuesta, )
 
+# The `Respuesta` class is a model in a Python Django application that represents a response to a
+# consultation, and it includes a method to update the state of the consultation when a response is
+# created.
 class Respuesta(models.Model):
 
     consulta = models.ForeignKey(Consulta(), blank=True, null=True, on_delete=models.CASCADE)
@@ -49,6 +55,8 @@ class Respuesta(models.Model):
             force_update = True
         super(Respuesta, self).save(force_update=force_update)
 
+# The class "PreguntasFrecuentes" represents frequently asked questions with fields for the question,
+# description, and content.
 class PreguntasFrecuentes(models.Model):
     pregunta = models.CharField(max_length=160, blank=True, null=True)
     descripcion = models.TextField(blank=True, null=True)

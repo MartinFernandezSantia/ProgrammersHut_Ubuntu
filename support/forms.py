@@ -3,7 +3,8 @@ from django.forms import ModelForm
 from .models import Consulta
 from captcha.fields import CaptchaField
 
-# pip install django-simple-captcha
+# The `FormQuery` class is a model form that includes a captcha field and is used to send an email
+# with the form data.
 class FormQuery(ModelForm):
 
     captcha = CaptchaField()
