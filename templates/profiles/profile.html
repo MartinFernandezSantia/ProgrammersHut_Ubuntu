@@ -54,7 +54,7 @@
                                         <input disabled class="form-control" id="inputEmail" name="inputEmail" type="email" placeholder="Ingresa tu email" value="{{email}}" autocomplete="off">
                                     </div>
                                     <div class="mb-3">
-                                        <label class="small mb-1" for="changePass"><strong>Cambiar contraseña</strong></label>
+                                        <label class="small mb-1"><strong>Cambiar contraseña</strong></label>
                                         <ul class="list-group" id="changePass">
                                             <input class="form-control mb-1" id="inputCurrPass" name="inputCurrPass" type="password" placeholder="Ingresa tu contraseña actual" autocomplete="off">
                                             <input class="form-control mb-1" id="inputNewPass" name="inputNewPass" type="password" placeholder="Ingresa tu nueva contraseña" autocomplete="off">
@@ -71,7 +71,7 @@
                                     <textarea itemprop="description" class="form-control" id="inputBio" name="inputBio" type="text" rows="5" {% if user.username != username %} disabled {% endif %} autocomplete="off">{{biography}}</textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="small mb-1" for="list"><strong>Redes sociales</strong></label>
+                                    <label class="small mb-1"><strong>Redes sociales</strong></label>
                                     <ul class="list-group" id="list" itemprop="sameAs" itemscope itemtype="http://schema.org/WebPage">
                                         {% for red_social in redes_sociales %}
                                         <div class="d-flex">
@@ -118,26 +118,24 @@
 
         <!-- Change Profile Picture Modal -->
         <div class="my-modal text-center text-light " id="changeProfilePic" aria-labelledby="changeProfilePic">
-            <div class="my-modal-content">
-                <dl>
-                    <dt>
-                        <h6 class="h6 mt-3"><strong>Recorta tu nueva imagen de perfil</strong></h6>
-                    </dt><hr>
-                    <dd>
-                        <form id="formChangeProfilePic" method="post">
-                            {% csrf_token %}
-                            <div class="my-cropper-container ps-1 pe-1">
-                                <div>
-                                    <img id="imageCropper" src="" alt="Picture">
-                                </div>
-                            </div>
-                            <hr>
-                            <button type="submit" class="btn btn-outline-success w-75">Agregar</button>
-                        </form>
-                    </dd>
-                </dl>
+            <div class="my-modal-content ps-4 pe-4">
+                <div class="modal-title">
+                    <h6 class="h6 mt-3"><strong>Recorta tu nueva imagen de perfil</strong></h6>
+                </div>
+                <hr>
+                <form id="formChangeProfilePic" method="post">
+                    {% csrf_token %}
+                    <div id="outer-box">
+                        <div id="box1" >
+                            <img id="image" src="">
+                        </div>
+                    </div>
+                    <hr>
+                    <button type="submit" class="btn btn-outline-success w-75 mb-2">Agregar</button>
+                </form>
             </div>
         </div>
+
         {% endif %}
     </div>
 {% endblock %}
@@ -147,68 +145,73 @@
 
     <script>
         var cropper;
-
         function openCropperModal(){
-            var myModal = $(".my-modal")[0];
+            var myModal = document.getElementById("changeProfilePic");
             myModal.style.display = "block";
 
-            
+            let outerBox = document.getElementById("outer-box");
+            let windowHeight = $(window).height();
+            outerBox.style.maxHeight = (windowHeight * 0.7) * 0.65 + "px";
+
             var file = document.querySelector('input[type=file]').files[0];
-            var preview = document.getElementById("imageCropper");
+            var preview = document.getElementById("image");
             var reader = new FileReader();
 
             reader.onloadend = function(){
                 preview.src = reader.result;
 
-                cropper = new Cropper(preview, {
-                    aspectRatio: 1,
-                    viewMode: 3,
-                    zoomable: false,
-                    scalable: false,
-                    movable: false,
-                    responsive: false,
-                    minCropBoxWidth: 200,
-                    minCropBoxHeight: 200,
-                });
+                preview.onload = function() {
+                    cropper = new Cropper(preview, {
+                        aspectRatio: 1,
+                        viewMode: 2,
+                        zoomable: false,
+                        scalable: true,
+                        movable: false,
+                        responsive: true,
+                        minCropBoxWidth: 50,
+                        minCropBoxHeight: 50,
+                        autoCropArea: 0.5,
+                        background: false,
+                        guides: false,
 
-                document.getElementById("formChangeProfilePic").addEventListener('submit', function(event) {
-                    event.preventDefault();
-                    // Obtener los datos de la imagen recortada
-                    var croppedCanvas = cropper.getCroppedCanvas();
-                    croppedCanvas.toBlob(function(blob) {
-                        // Crear un objeto FormData para enviar los datos de la imagen
-                        var formData = new FormData();
-                        formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
-                        formData.append('image', blob);
-                        // Enviar los datos de la imagen al servidor utilizando AJAX
-                        var xhr = new XMLHttpRequest();
-                        xhr.open('POST', "{% url 'update_avatar' username=user.username %}", true);
-                        xhr.onload = function() {
-                            if (this.status == 200) {
-                                // La imagen se ha enviado correctamente
-                                console.log('Imagen enviada correctamente');
-                                location.reload();
-                            } else {
-                                // Hubo un error al enviar la imagen
-                                console.log('Error al enviar la imagen');
-                            }
-                        };
-                        xhr.send(formData);
                     });
-                });
+
+                    
+                }
             }
+
+            document.getElementById("formChangeProfilePic").addEventListener('submit', function(event) {
+                event.preventDefault();
+                // Obtener los datos de la imagen recortada
+                var croppedCanvas = cropper.getCroppedCanvas();
+                croppedCanvas.toBlob(function(blob) {
+                    // Crear un objeto FormData para enviar los datos de la imagen
+                    var formData = new FormData();
+                    formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+                    formData.append('image', blob);
+                    // Enviar los datos de la imagen al servidor utilizando AJAX
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', "{% url 'update_avatar' username=user.username %}", true);
+                    xhr.onload = function() {
+                        if (this.status == 200) {
+                            // La imagen se ha enviado correctamente
+                            console.log('Imagen enviada correctamente');
+                            location.reload();
+                        } else {
+                            // Hubo un error al enviar la imagen
+                            console.log('Error al enviar la imagen');
+                        }
+                    };
+                    xhr.send(formData);
+                });
+            });
 
             if (file) {
                 reader.readAsDataURL(file);
             } else {
                 preview.src = "";
             }
-        }        
-    </script>
-    <script>
-        var myModal = $(".my-modal")[0]
-
-        if (myModal.style.display != "none")
+            if (myModal.style.display != "none")
         {
             var myModalContent = $(".my-modal-content")[0]
             $(document).mouseup(function(e) 
@@ -220,5 +223,6 @@
                 }
             });
         }
+        }        
     </script>
 {% endblock %}
