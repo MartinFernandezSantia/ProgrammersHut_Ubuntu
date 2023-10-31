@@ -57,6 +57,7 @@
                                         <label class="small mb-1"><strong>Cambiar contraseña</strong></label>
                                         <ul class="list-group" id="changePass">
                                             <input class="form-control mb-1" id="inputCurrPass" name="inputCurrPass" type="password" placeholder="Ingresa tu contraseña actual" autocomplete="off">
+                                            <p class="m-0 mt-1 form-text text-secondary text-start">Mínimo: 8+ caract., mayús., minús. y números.</p>
                                             <input class="form-control mb-1" id="inputNewPass" name="inputNewPass" type="password" placeholder="Ingresa tu nueva contraseña" autocomplete="off">
                                             <input class="form-control mb-1" id="inputNewPass2" name="inputNewPass2" type="password" placeholder="Confirma tu nueva contraseña" autocomplete="off">
                                         </ul>
@@ -118,15 +119,15 @@
 
         <!-- Change Profile Picture Modal -->
         <div class="my-modal text-center text-light " id="changeProfilePic" aria-labelledby="changeProfilePic">
-            <div class="my-modal-content ps-4 pe-4">
-                <div class="modal-title">
+            <div class="my-modal-content">
+                <div class="modal-title ms-4 me-4">
                     <h6 class="h6 mt-3"><strong>Recorta tu nueva imagen de perfil</strong></h6>
                 </div>
                 <hr>
                 <form id="formChangeProfilePic" method="post">
                     {% csrf_token %}
                     <div id="outer-box">
-                        <div id="box1" >
+                        <div id="box1" class="ms-4 me-4">
                             <img id="image" src="">
                         </div>
                     </div>
@@ -151,7 +152,8 @@
 
             let outerBox = document.getElementById("outer-box");
             let windowHeight = $(window).height();
-            outerBox.style.maxHeight = (windowHeight * 0.7) * 0.65 + "px";
+            outerBox.style.maxHeight = (windowHeight * 0.8) * 0.65 + "px";
+            console.log(windowHeight);
 
             var file = document.querySelector('input[type=file]').files[0];
             var preview = document.getElementById("image");

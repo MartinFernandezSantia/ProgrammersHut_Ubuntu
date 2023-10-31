@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "registration",  # should be immediately above 'django.contrib.admin'
     # Django channels
-    # "daphne",
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -92,7 +92,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "ProgrammersHut.wsgi.application"
-"""ASGI_APPLICATION = "ProgrammersHut.asgi.application"
+ASGI_APPLICATION = "ProgrammersHut.asgi.application"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -101,7 +101,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
-"""
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 

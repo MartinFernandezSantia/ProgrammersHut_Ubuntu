@@ -13,8 +13,8 @@ class AdminUser(admin.ModelAdmin):
 
 class AdminDatosUsuario(admin.ModelAdmin):
     fieldsets = [
-        ("Información del usuario", {"fields": ["user", "country"]}),
-        ("Imagen de perfil", {"fields": ["avatar"]})
+        ("Información del usuario", {"fields": ["user", "country", "biography"]}),
+        ("Imagen de perfil", {"fields": ["avatar", "profile_pic"]})
     ]
     list_display = ["user", "country", "check_avatar"]
     ordering = ["user"]
